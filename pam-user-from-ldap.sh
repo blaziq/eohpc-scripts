@@ -28,8 +28,8 @@ set_quotas() {
     local SLICE="user-${USER_ID}.slice"
     
     # if session is being closed - reset quotas and exit
-    if [[ "${PAM_TYPE}" == "open_session" ]]; then
-        systemctl revert "${SLICE}"
+    if [[ "${PAM_TYPE}" == "close_session" ]]; then
+        #systemctl revert "${SLICE}"
         exit 0
     fi
 
@@ -88,6 +88,7 @@ tmp="${0#*-*-}"      # remove first two dash-separated fields
 tmp="${tmp%.*}"      # and the .sh extension
 func="${tmp//-/_}"
 if declare -F ${func} &> /dev/null; then
+    logger -p authpriv.notice "${0} ===================== ${func}"
     $func
     exit $?
 fi
