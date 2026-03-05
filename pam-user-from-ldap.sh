@@ -26,6 +26,9 @@ check_access() {
 set_quotas() {
     local USER_ID="$(id -u ${USER_NAME})"
     local SLICE="user-${USER_ID}.slice"
+    
+    # if session is not being opened - exit
+    [[ "${PAM_TYPE}" == "open_session" ]] || exit 0
 
     # Assume only one group should match; we take the first valid one.
     match=""
@@ -76,7 +79,6 @@ set_quotas() {
         MemorySwapMax=0 \
         ${GPU_DEVICES}
 }
-
 
 # run function based on the actual script (symlink) name
 tmp="${0#*-*-}"      # remove first two dash-separated fields
