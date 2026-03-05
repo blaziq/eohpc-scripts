@@ -28,7 +28,7 @@ set_quotas() {
     local SLICE="user-${USER_ID}.slice"
     
     # if session is being closed - reset quotas and exit
-    [[ "${PAM_TYPE}" == "close_session" ]] && (systemctl revert "${SLICE}"; exit 0)
+    [[ "${PAM_TYPE}" == "open_session" ]] || (systemctl revert "${SLICE}"; exit 0)
 
     # Assume only one group should match; we take the first valid one.
     match=""
