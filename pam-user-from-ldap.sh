@@ -61,8 +61,9 @@ set_quotas() {
 
     # GPU quota
     [[ ! ${GPU_QUOTA} =~ ^[0-9]+ ]] && GPU_QUOTA=""
-    GPU_DEVICES=$(pam-user-gpu-devices.py "${GPU_QUOTA}")
-
+    GPU_DEVICES=$(/usr/local/sbin/pam-user-gpu-devices.py "${GPU_QUOTA}")
+    logger -p authpriv.notice "======== ${GPU_QUOTA}"
+    logger -p authpriv.notice "======== ${GPU_DEVICES}"
     # This sets the slice quota in runtime so it is not permanent but active until next login or reboot
     # There'll be no setting in /etc/systemd/system.control/${SLICE}
     # but only in /run/systemd/system.control/${SLICE}.d
