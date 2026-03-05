@@ -42,7 +42,7 @@ set_quotas() {
         fi
     done
 
-    [[ -z "${match}" ]] && exit 1
+    [[ -z "${match}" ]] && exit 0
 
     CPU_QUOTA=""
     MEM_QUOTA=""
@@ -66,11 +66,12 @@ set_quotas() {
     # This sets the slice quota in runtime so it is not permanent but active until next login or reboot
     # There'll be no setting in /etc/systemd/system.control/${SLICE}
     # but only in /run/systemd/system.control/${SLICE}.d
-    logger -p authpriv.notice "============================ systemctl set-property --runtime \"${SLICE}\" CPUQuota=\"${CPU_QUOTA}\" MemoryMax=\"${MEM_QUOTA}\" MemorySwapMax=0"
+    logger -p authpriv.notice "${0} set_quotas: Setting quotas for user \"${SLICE}\" CPUQuota=\"${CPU_QUOTA}\" MemoryMax=\"${MEM_QUOTA}\" MemorySwapMax=0 ${GPU_DEVICES}"
     systemctl set-property --runtime "${SLICE}" \
         CPUQuota="${CPU_QUOTA}" \
         MemoryMax="${MEM_QUOTA}" \
-        MemorySwapMax=0
+        MemorySwapMax=0 \
+        ${GPU_DEVICES}
 }
 
 
