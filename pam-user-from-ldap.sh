@@ -52,6 +52,7 @@ set_quotas() {
     CPU_QUOTA=""
     MEM_QUOTA=""
     GPU_QUOTA=""
+    GPU_DEVICES=""
 
     if [[ ${match} =~ (^|_)cpu([0-9]+)($|_) ]]; then CPU_QUOTA="${BASH_REMATCH[2]}"; fi
     if [[ ${match} =~ (^|_)mem([0-9]+)($|_) ]]; then MEM_QUOTA="${BASH_REMATCH[2]}"; fi
