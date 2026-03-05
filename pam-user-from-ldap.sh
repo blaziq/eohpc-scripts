@@ -15,11 +15,12 @@ check_access() {
         exit 0
     fi
     # Deny to users in ${PHILAB_GROUP} who dont have a relevant group corresponding to ${HOST_NAME}
-    if grep -q " ${PHILAB_GROUP} " <<< " ${USER_GROUPS} " && ! grep -q " ${HOST_NAME}[ _]" <<< " ${USER_GROUPS} " ; then
+    if grep -q " ${PHILAB_GROUP} " <<< " ${USER_GROUPS} " && ! grep -q " ${HOST_NAME}[ _]?" <<< " ${USER_GROUPS} " ; then
         logger -p authpriv.notice "${0} check_access: Deny for user in group '${PHILAB_GROUP}' without '${HOST_NAME}*' group, user=${USER_NAME} host=${HOST_NAME} groups=(${USER_GROUPS})"
         exit 1
     fi
     # Allow other users who went through access.conf
+    logger -p authpriv.notice "${0} check_access: Allow for user=${USER_NAME} host=${HOST_NAME} groups=(${USER_GROUPS})"
     exit 0
 }
 
@@ -88,7 +89,6 @@ tmp="${0#*-*-}"      # remove first two dash-separated fields
 tmp="${tmp%.*}"      # and the .sh extension
 func="${tmp//-/_}"
 if declare -F ${func} &> /dev/null; then
-    logger -p authpriv.notice "${0} ===================== ${func}"
     $func
     exit $?
 fi
