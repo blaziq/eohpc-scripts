@@ -29,12 +29,8 @@ set_quotas() {
     local USER_ID="$(id -u ${USER_NAME})"
     local SLICE="user-${USER_ID}.slice"
     
-    logger -p authpriv.notice "${0} ${PAM_TYPE}"
-    # if session is being closed - reset quotas and exit
-    if [[ "${PAM_TYPE}" == "close_session" ]]; then
-        #systemctl revert "${SLICE}"
-        exit 0
-    fi
+    # if session is being closed - exit
+    [[ "${PAM_TYPE}" == "close_session" ]] && exit 0
 
     # Assume only one group should match; we take the first valid one.
     match=""
