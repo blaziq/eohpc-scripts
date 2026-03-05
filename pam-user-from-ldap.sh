@@ -77,6 +77,7 @@ set_quotas() {
 
 # run function based on the actual script (symlink) name
 tmp="${0#*-*-}"      # remove first two dash-separated fields
+tmp="${tmp%.*}"      # and the .sh extension
 func="${tmp//-/_}"
 if declare -F ${func} &> /dev/null; then
     $func
