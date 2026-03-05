@@ -62,10 +62,14 @@ set_quotas() {
     # GPU quota
     [[ ! ${GPU_QUOTA} =~ ^[0-9]+ ]] && GPU_QUOTA=""
     GPU_DEVICES=$(/usr/local/sbin/pam-user-gpu-devices.py "${GPU_QUOTA}")
+    
     # This sets the slice quota in runtime so it is not permanent but active until next login or reboot
     # There'll be no setting in /etc/systemd/system.control/${SLICE}
     # but only in /run/systemd/system.control/${SLICE}.d
     logger -p authpriv.notice "${0} set_quotas: Setting quotas for user \"${SLICE}\" CPUQuota=\"${CPU_QUOTA}\" MemoryMax=\"${MEM_QUOTA}\" MemorySwapMax=0 ${GPU_DEVICES}"
+    # First reset to default so that new settings can be applied from scratch
+    systemctl revert "${SLICE}"
+    # And then apply the quotas
     systemctl set-property --runtime "${SLICE}" \
         CPUQuota="${CPU_QUOTA}" \
         MemoryMax="${MEM_QUOTA}" \
