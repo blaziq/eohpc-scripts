@@ -19,7 +19,8 @@ check_access() {
         logger -p authpriv.notice "${0} check_access: Deny for user in group '${PHILAB_GROUP}' without '${HOST_NAME}*' group, user=${USER_NAME} host=${HOST_NAME} groups=(${USER_GROUPS})"
         exit 1
     fi
-    # Allow other users who went through access.conf
+    # Allow users in ${PHILAB_GROUP} who dont have a relevant group corresponding to ${HOST_NAME}
+    # and other users who went through access.conf
     logger -p authpriv.notice "${0} check_access: Allow for user=${USER_NAME} host=${HOST_NAME} groups=(${USER_GROUPS})"
     exit 0
 }
