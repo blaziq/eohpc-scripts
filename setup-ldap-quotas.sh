@@ -65,7 +65,7 @@ PAM_CONFIG_SESSION="/etc/pam.d/common-session"
 PAM_INCLUDE_SET_QUOTAS="@include ${SET_QUOTAS}"
 
 cat << EOF > "${PAM_DIR}/${SET_QUOTAS}"
-session optional pam_exec.so seteuid ${SCRIPT_SET_QUOTAS}
+session optional pam_exec.so ${SCRIPT_SET_QUOTAS}
 EOF
 
 grep -Fqx "${PAM_INCLUDE_SET_QUOTAS}" ${PAM_CONFIG_SESSION} || \
