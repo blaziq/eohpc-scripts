@@ -1,0 +1,12 @@
+[Unit]
+Description=Configure NVIDIA MIG
+After=multi-user.target nvidia-persistenced.service
+Requires=nvidia-persistenced.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/mig-setup.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
