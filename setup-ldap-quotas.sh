@@ -28,7 +28,7 @@ ln -sfr "${SCRIPT_BASE}" "${SCRIPT_SET_QUOTAS}"
 LDAP_CONF="/etc/ldap.conf"
 LDAP_IP="10.0.0.3"
 LDAP_URI="ldap://${LDAP_IP}"
-sed -i "s/^[[:space:]]*uri[[:space:]]\+\(.*\)$/uri ${LDAP_URI}/" "${LDAP_CONF}"
+sed -i "s/^[[:space:]]*uri[[:space:]]\+\(.*\)$/uri ${LDAP_URI//\//\\/}/" "${LDAP_CONF}"
 
 # -----------------------------------------------------------------------------
 # 3. Allow logind to communicate with the LDAP server
