@@ -23,7 +23,15 @@ ln -sfr "${SCRIPT_BASE}" "${SCRIPT_CHECK_ACCESS}"
 ln -sfr "${SCRIPT_BASE}" "${SCRIPT_SET_QUOTAS}"
 
 # -----------------------------------------------------------------------------
-# 2. Allow logind to communicate with the LDAP server
+# 2. Set up LDAP communication over the internal IP
+# -----------------------------------------------------------------------------
+LDAP_CONF="/etc/ldap.conf"
+LDAP_IP="10.0.0.3"
+LDAP_URI="ldap://${LDAP_IP}"
+sed -i "^s/[[:space:]]*uri[[:space:]]\+\(.*\)$/uri ${LDAP_URI}/" "${LDAP_CONF}"
+
+# -----------------------------------------------------------------------------
+# 3. Allow logind to communicate with the LDAP server
 # -----------------------------------------------------------------------------
 LOGIND_OVERRIDE_CONF_DIR="/etc/systemd/system/systemd-logind.service.d"
 LOGIND_OVERRIDE_CONF="${LOGIND_OVERRIDE_CONF_DIR}/override.conf"
@@ -38,7 +46,7 @@ systemctl daemon-reload
 systemctl restart systemd-logind
 
 # -----------------------------------------------------------------------------
-# 3. Let all users from group 'philab' through in /etc/security/access.conf
+# 4. Let all users from group 'philab' through in /etc/security/access.conf
 #    They will be later allowed or denied by checking groups in the script
 # -----------------------------------------------------------------------------
 ACCESS_CONFIG="/etc/security/access.conf"
@@ -48,7 +56,7 @@ grep -Fqx "${ACCESS_ALLOW_PHILAB}" "${ACCESS_CONFIG}" || \
     sed -i "/^-:ALL:ALL[[:space:]]*$/i ${ACCESS_ALLOW_PHILAB}" "${ACCESS_CONFIG}"
     
 # -----------------------------------------------------------------------------
-# 4. Check access in PAM based on user groups from LDAP
+# 5. Check access in PAM based on user groups from LDAP
 # -----------------------------------------------------------------------------
 PAM_CONFIG_SSHD="${PAM_DIR}/sshd"
 PAM_INCLUDE_CHECK_ACCESS="@include ${CHECK_ACCESS}"
@@ -61,7 +69,7 @@ grep -Fqx "${PAM_INCLUDE_CHECK_ACCESS}" "${PAM_CONFIG_SSHD}" || \
     sed -i "/^@include[[:space:]]\\+common-account[[:space:]]*$/i ${PAM_INCLUDE_CHECK_ACCESS}" "${PAM_CONFIG_SSHD}"
 
 # -----------------------------------------------------------------------------
-# 5. Set up CPU and RAM quotas in PAM user session:
+# 6. Set up CPU and RAM quotas in PAM user session:
 # -----------------------------------------------------------------------------
 PAM_CONFIG_SESSION="/etc/pam.d/common-session"
 PAM_INCLUDE_SET_QUOTAS="@include ${SET_QUOTAS}"
