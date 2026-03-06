@@ -2,7 +2,8 @@
 set -e
 
 MIG_CONFIG="/usr/local/etc/mig-setup.conf"
-MIG_SLICES=$(sed 's/^ *//;s/ *$//' 2>/dev/null <${MIG_CONFIG})
+MIG_SLICES="$(sed 's/^ *//;s/ *$//' 2>/dev/null <${MIG_CONFIG})"
+logger -t mig-setup "MIG: '${MIG_SLICES}'"
 
 if [[ "${MIG_SLICES}" == "" ]]; then
     logger -t mig-setup "GPU layout not found in ${MIG_CONFIG}, skipping GPU mig configuration"
