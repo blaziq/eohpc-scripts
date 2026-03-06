@@ -71,7 +71,6 @@ set_quotas() {
     # GPU quota
     [[ ! ${GPU_QUOTA} =~ ^[0-9]+ ]] && GPU_QUOTA=""
     GPU_DEVICES=$(/usr/local/sbin/pam-user-gpu-devices.py "${GPU_QUOTA}")
-    logger -p authpriv.notice "${0} set_quotas:${GPU_QUOTA} ${GPU_DEVICES}"
 
     # This sets the slice quota in runtime so it is not permanent but active until next login or reboot
     # There'll be no setting in /etc/systemd/system.control/${SLICE}
@@ -83,7 +82,6 @@ set_quotas() {
         MemoryMax="${MEM_QUOTA}" \
         MemorySwapMax=0 \
         ${GPU_DEVICES}
-    logger -p authpriv.notice "${0} set_quotas: $(whoami)"
 }
 
 # run function based on the actual script (symlink) name
