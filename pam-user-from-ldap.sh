@@ -8,20 +8,22 @@ HOST_NAME="$(hostname -s | tr '[:upper:]' '[:lower:]')"
 ADMINS_GROUP="plesadmins"
 PHILAB_GROUP="philab"
 
+B=$(basename $0)
+
 check_access() {
     # Allow for all users in ${ADMINS_GROUP} without further checks
     if grep -q " ${ADMINS_GROUP} " <<< " ${USER_GROUPS} "; then
-        logger -p authpriv.notice "${0} check_access: Allow for user in group '${ADMINS_GROUP}', user=${USER_NAME} host=${HOST_NAME} groups=(${USER_GROUPS})"
+        logger -p authpriv.notice "${B}: Allow for user in group '${ADMINS_GROUP}', user=${USER_NAME} host=${HOST_NAME} groups=(${USER_GROUPS})"
         exit 0
     fi
     # Deny to users in ${PHILAB_GROUP} who dont have a relevant group corresponding to ${HOST_NAME}
     if grep -q " ${PHILAB_GROUP} " <<< " ${USER_GROUPS} " && ! grep -q " ${HOST_NAME}[ _]" <<< " ${USER_GROUPS} " ; then
-        logger -p authpriv.notice "${0} check_access: Deny for user in group '${PHILAB_GROUP}' without '${HOST_NAME}*' group, user=${USER_NAME} host=${HOST_NAME} groups=(${USER_GROUPS})"
+        logger -p authpriv.notice "${B}: Deny for user in group '${PHILAB_GROUP}' without '${HOST_NAME}*' group, user=${USER_NAME} host=${HOST_NAME} groups=(${USER_GROUPS})"
         exit 1
     fi
     # Allow users in ${PHILAB_GROUP} who dont have a relevant group corresponding to ${HOST_NAME}
     # and other users who went through access.conf
-    logger -p authpriv.notice "${0} check_access: Allow for user=${USER_NAME} host=${HOST_NAME} groups=(${USER_GROUPS})"
+    logger -p authpriv.notice "${B}: Allow for user=${USER_NAME} host=${HOST_NAME} groups=(${USER_GROUPS})"
     exit 0
 }
 
@@ -75,7 +77,7 @@ set_quotas() {
     # This sets the slice quota in runtime so it is not permanent but active until next login or reboot
     # There'll be no setting in /etc/systemd/system.control/${SLICE}
     # but only in /run/systemd/system.control/${SLICE}.d
-    logger -p authpriv.notice "${0} set_quotas: Setting quotas for user \"${SLICE}\" CPUQuota=\"${CPU_QUOTA}\" MemoryMax=\"${MEM_QUOTA}\" MemorySwapMax=0 ${GPU_DEVICES}"
+    logger -p authpriv.notice "${B}: Setting quotas for user \"${SLICE}\" CPUQuota=\"${CPU_QUOTA}\" MemoryMax=\"${MEM_QUOTA}\" MemorySwapMax=0 ${GPU_DEVICES}"
     # And then apply the quotas
     systemctl set-property --runtime "${SLICE}" \
         CPUQuota="${CPU_QUOTA}" \
