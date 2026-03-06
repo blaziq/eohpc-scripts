@@ -36,3 +36,5 @@ nvidia-smi mig -dci -i $GPU || true
 # Create two 20GB instances
 nvidia-smi mig -cgi ${MIG_SLICES} -i $GPU
 nvidia-smi mig -cci -i $GPU
+
+exit 0
