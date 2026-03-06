@@ -36,7 +36,7 @@ SERVICE_MIG_SETUP="${MIG_SETUP}.service"
 
 echo "Installing script for setting up GPU mig slicing on boot ${BIN_DIR}..."
 
-install -m 711 "${SCRIPT_MIG_SETUP}.sh" "${BIN_DIR}"
+install -m 711 "${SCRIPT_MIG_SETUP}" "${BIN_DIR}"
 touch "${ETC_DIR}/${CONFIG_MIG_SETUP}"
 install -m 644 "${SERVICE_MIG_SETUP}" "${SVC_DIR}"
 systemctl daemon-reload
