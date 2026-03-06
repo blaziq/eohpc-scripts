@@ -82,8 +82,8 @@ def main(argv: Optional[list[str]] = None) -> int:
 
     if devices:
         devices[:0] = NVIDIA_DEVICES
-
-    print(" DevicePolicy=closed " + "".join([f" DeviceAllow={dev}" for dev in devices]))
+        print(" DevicePolicy=closed " + "".join([f" DeviceAllow={dev}" for dev in devices]))
+    
     return 0
 
 
