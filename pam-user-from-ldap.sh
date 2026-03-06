@@ -30,7 +30,10 @@ set_quotas() {
     local SLICE="user-${USER_ID}.slice"
     
     # if session is being closed - exit
-    [[ "${PAM_TYPE}" == "close_session" ]] && exit 0
+    if [[ "${PAM_TYPE}" == "close_session" ]]; then
+        systemctl revert "${SLICE}"
+        exit 0
+    fi
 
     # Assume only one group should match; we take the first valid one.
     match=""
@@ -74,9 +77,6 @@ set_quotas() {
     # There'll be no setting in /etc/systemd/system.control/${SLICE}
     # but only in /run/systemd/system.control/${SLICE}.d
     logger -p authpriv.notice "${0} set_quotas: Setting quotas for user \"${SLICE}\" CPUQuota=\"${CPU_QUOTA}\" MemoryMax=\"${MEM_QUOTA}\" MemorySwapMax=0 ${GPU_DEVICES}"
-    # First reset to default so that new settings can be applied from scratch
-    systemctl revert "${SLICE}"
-    systemctl daemon-reload
     # And then apply the quotas
     systemctl set-property --runtime "${SLICE}" \
         CPUQuota="${CPU_QUOTA}" \
