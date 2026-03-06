@@ -26,8 +26,8 @@ ln -sfr "${SCRIPT_BASE}" "${SCRIPT_SET_QUOTAS}"
 # 2. Set up LDAP communication over the internal IP
 # -----------------------------------------------------------------------------
 LDAP_CONF="/etc/ldap.conf"
-LDAP_IP="10.0.0.3"
-LDAP_URI="ldap://${LDAP_IP}"
+LDAP_IP="10.0.0.30"
+LDAP_URI="ldap://${LDAP_IP}/"
 sed -i "s/^[[:space:]]*uri[[:space:]]\+\(.*\)$/uri ${LDAP_URI//\//\\/}/" "${LDAP_CONF}"
 
 # -----------------------------------------------------------------------------
