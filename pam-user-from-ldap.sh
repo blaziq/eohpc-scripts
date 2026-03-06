@@ -83,6 +83,7 @@ set_quotas() {
         MemoryMax="${MEM_QUOTA}" \
         MemorySwapMax=0 \
         ${GPU_DEVICES}
+    logger -p authpriv.notice "${0} set_quotas: $(whoami)"
 }
 
 # run function based on the actual script (symlink) name
