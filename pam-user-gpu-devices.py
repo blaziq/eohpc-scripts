@@ -9,6 +9,8 @@ from pathlib import Path
 from typing import Optional
 
 NVIDIA_DEVICES = [
+    "/dev/fuse",
+    "/dev/loop-control",
     "/dev/nvidiactl",
     "/dev/nvidia-uvm",
     "/dev/nvidia-modeset",
