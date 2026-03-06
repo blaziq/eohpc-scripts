@@ -25,8 +25,10 @@ ln -sfr "${SCRIPT_BASE}" "${SCRIPT_SET_QUOTAS}"
 # -----------------------------------------------------------------------------
 # 2. Allow logind to communicate with the LDAP server
 # -----------------------------------------------------------------------------
-LOGIND_OVERRIDE_CONF="/etc/systemd/system/systemd-logind.service.d/override.conf"
+LOGIND_OVERRIDE_CONF_DIR="/etc/systemd/system/systemd-logind.service.d"
+LOGIND_OVERRIDE_CONF="${LOGIND_OVERRIDE_CONF_DIR}/override.conf"
 # Fix logind configuration to allow configuration with LDAP
+mkdir -p "${LOGIND_OVERRIDE_CONF_DIR}
 cat << 'EOF' > "${LOGIND_OVERRIDE_CONF}"
 [Service]
 RestrictAddressFamilies=AF_UNIX AF_NETLINK AF_INET
